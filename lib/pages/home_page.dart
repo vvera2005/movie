@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/logic/bloc/movie_bloc.dart';
+import 'package:movies/models/primary_image_model.dart';
+import 'package:movies/pages/detailed_movies.dart';
+import 'package:movies/routes/route_params/movie_detail_route_params.dart';
 import 'package:movies/services/api_service.dart';
 import 'package:movies/services/movie_service.dart';
 import 'package:movies/services/second_line_movies_service.dart';
@@ -74,22 +77,38 @@ class HomePage extends StatelessWidget {
                             state.movies.isNotEmpty ? state.movies.length : 0,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.network(
-                              state.movies[index].primaryImage?.url ?? "",
-                              height: 180,
-                            ),
-                          );
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        "/movie-detail",
+                                        arguments: MovieDetailRouteParam(
+                                            movieBloc:
+                                                context.read<MovieBloc>(),
+                                            index: index));
+                                  },
+                                  child: Container(
+                                      child: state.movies[index].primaryImage !=
+                                              null
+                                          ? Image.network(
+                                              state.movies[index].primaryImage
+                                                      ?.url ??
+                                                  "",
+                                              height: 180,
+                                            )
+                                          : Container(
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white),
+                                              child: Center(
+                                                  child: Text(state
+                                                          .movies[index]
+                                                          .titleText
+                                                          ?.text ??
+                                                      "No Name")),
+                                            ))));
                         },
                       )),
                       const SizedBox(height: 12),
-                      // Text(
-                      //   "data",
-                      //   style: TextStyle(
-                      //     color: Colors.amber,
-                      //     fontSize: 36,
-                      //   ),
-                      // ),
                       const Text(
                         "Prime - Movies in indi",
                         style: TextStyle(
@@ -104,20 +123,36 @@ class HomePage extends StatelessWidget {
                             ? state.slmovies.length
                             : 0,
                         itemBuilder: (context, index) {
-                          // return const Text(
-                          //   "data",
-                          //   style: TextStyle(
-                          //     color: Colors.amber,
-                          //     fontSize: 36,
-                          //   ),
-                          // );
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.network(
-                              state.slmovies[index].primaryImage?.url ?? "",
-                              height: 180,
-                            ),
-                          );
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      "/movie-detail",
+                                      arguments: MovieDetailRouteParam(
+                                          movieBloc: context.read<MovieBloc>(),
+                                          index: index));
+                                },
+                                child: Container(
+                                    child: state.slmovies[index].primaryImage !=
+                                            null
+                                        ? Image.network(
+                                            state.slmovies[index].primaryImage
+                                                    ?.url ??
+                                                "",
+                                            height: 180,
+                                          )
+                                        : Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white),
+                                            child: Center(
+                                                child: Text(state
+                                                        .slmovies[index]
+                                                        .titleText
+                                                        ?.text ??
+                                                    "No Name")),
+                                          )),
+                              ));
                         },
                       )),
                     ],

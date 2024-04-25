@@ -8,6 +8,7 @@ class MovieService {
   final ApiService apiService;
 
   MovieService(this.apiService);
+
   Future<List<MovieModel>> getMovies() async {
     final Response responce = await apiService.getResponse(HttpMethod.get,
         path: "/titles/x/upcoming");
@@ -16,5 +17,10 @@ class MovieService {
       return decodedData.map((dynamic e) => MovieModel.fromJson(e)).toList();
     }
     throw ("resposed failed with status code ${responce.statusCode}");
+  }
+
+  Future<MovieModel> getMovieById(int id) async {
+    List<MovieModel> data = await getMovies();
+    return data[id];
   }
 }
